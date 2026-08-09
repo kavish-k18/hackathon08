@@ -16,17 +16,7 @@ const turnInterviewSchema = z.object({
   message: z.string().min(1),
 });
 
-// Helper to load JSON files safely
-function loadJsonFile(filename: string) {
-  try {
-    const filePath = path.join(/*turbopackIgnore: true*/ process.cwd(), filename);
-    const content = fs.readFileSync(filePath, 'utf-8');
-    return JSON.parse(content);
-  } catch (err) {
-    console.error(`Failed to load ${filename}`, err);
-    return null;
-  }
-}
+import curriculumData from '../../../../curriculum.json';
 
 // Ensure the LLM outputs exactly what we need
 function createSystemPrompt(
@@ -91,7 +81,7 @@ If the candidate's response is complete nonsense, a blatant evasion (e.g., "I do
 
 If the candidate's response is a genuine attempt to answer (even if slightly flawed):
 - Set "questionComplete": true
-- Provide brief feedback on their answer.
+- Provide VERY BRIEF feedback (maximum 1 short sentence). DO NOT write a long explanation or summarize their answer. Just acknowledge it and immediately move on.
 ${nextTopic 
   ? `- Ask the NEXT question to transition to a new topic.\n  The next question MUST be about: Day ${nextTopic.day} - ${nextTopic.title} (${nextTopic.objectives.join(', ')})` 
   : `- Ask an intelligent follow-up question based on their previous response to dig deeper into their understanding of the current topic.`}
@@ -117,8 +107,7 @@ export async function POST(req: Request) {
       
       const { candidate } = result.data;
       
-      // Load curriculum data
-      const curriculumData = loadJsonFile('curriculum.json');
+      // Curriculum data is now imported directly
       
       if (!curriculumData) {
         return NextResponse.json({ error: 'Internal data files missing' }, { status: 500 });
@@ -213,7 +202,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ reply: 'Interview already completed.', done: true, feedback: interviewData.feedback });
       }
       
-      const curriculumData = loadJsonFile('curriculum.json');
+      // Curriculum data is imported at the top of the file
       const candidate = interviewData.candidate_data;
       const history = interviewData.history;
       let totalQuestions = interviewData.total_questions_asked;
