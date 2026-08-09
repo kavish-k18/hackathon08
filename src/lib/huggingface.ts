@@ -7,7 +7,7 @@ if (!hfToken) {
 }
 
 export const hf = new HfInference(hfToken);
-export const DEFAULT_MODEL = 'Qwen/Qwen2.5-72B-Instruct'; // Changed from Llama-3 to avoid license agreement errors on free accounts
+export const DEFAULT_MODEL = 'Qwen/Qwen2.5-7B-Instruct'; // Changed to 7B model for faster response times (less lag)
 
 export async function generateInterviewResponse(
   systemPrompt: string,
@@ -23,8 +23,8 @@ export async function generateInterviewResponse(
     const response = await hf.chatCompletion({
       model,
       messages: formattedMessages,
-      max_tokens: 800,
-      temperature: 0.7,
+      max_tokens: 400,
+      temperature: 0.6,
       // Some models support response_format: { type: "json_object" } but Llama 3 via HF 
       // might just need strong prompting. We will rely on strong system prompting.
     });
