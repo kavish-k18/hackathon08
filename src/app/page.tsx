@@ -221,7 +221,26 @@ export default function InterviewDashboard() {
         </div>
       </motion.header>
 
-      {/* Main Content */}
+      {/* Main Content or Hero */}
+      {!sessionId ? (
+        <motion.div 
+          className={styles.hero}
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <motion.h2 className={styles.heroTitle} initial={{ y: -20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.1 }}>
+            Master Your Next Technical Interview
+          </motion.h2>
+          <motion.p className={styles.heroSubtitle} initial={{ y: 20, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.2 }}>
+            Practice real-world technical challenges with an advanced AI interviewer designed to assess your skills, ask follow-up questions, and provide actionable feedback.
+          </motion.p>
+          <motion.div className={styles.heroGlowingBox} initial={{ y: 30, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ delay: 0.3 }}>
+            <p className={styles.heroInstruction}>Ready to test your skills?</p>
+            <p style={{ color: 'var(--text-muted)' }}>Use the dropdown in the top menu to select a candidate profile and start your interview session.</p>
+          </motion.div>
+        </motion.div>
+      ) : (
       <motion.main 
         className={styles.main}
         variants={containerVariants}
@@ -363,6 +382,7 @@ export default function InterviewDashboard() {
           )}
         </motion.div>
       </motion.main>
+      )}
 
       {feedback && showFeedbackModal && (
         <div className={styles.modalOverlay}>
